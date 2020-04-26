@@ -1,0 +1,15 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        {% for event in events %}
+            {{event.event_name}}
+            {{event.category_name}}
+            {{event.event_discription}}
+            {{event.is_urgent}}
+            {{event.due_date}}
+            {{event.notes}}
+        {% endfor %}
+    </body>
+</html>
