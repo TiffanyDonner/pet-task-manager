@@ -1,8 +1,5 @@
-<html>
-    <head>
-
-    </head>
-    <body>
+{% extends 'base.html' %}
+{% block content %}
         {% for event in events %}
             {{event.event_name}}
             {{event.category_name}}
@@ -11,5 +8,4 @@
             {{event.due_date}}
             {{event.notes}}
         {% endfor %}
-    </body>
-</html>
+{% endblock %}
