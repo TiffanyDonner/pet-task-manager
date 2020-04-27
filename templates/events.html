@@ -1,11 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
+    <ul class="collapsible" data-collapsible="accordion">
         {% for event in events %}
-            {{event.event_name}}
-            {{event.category_name}}
-            {{event.event_discription}}
-            {{event.is_urgent}}
-            {{event.due_date}}
-            {{event.notes}}
+        <li>
+            <div class="collapsible-header">
+
+                <div class=" task_header col s9">
+                    <i class="material-icons">expand_more</i><strong>{{event.event_name}}</strong> - {{event.due_date}}
+                </div>
+            </div>
+            <div class="collapsible-body">
+                <span>
+                    {{event.event_discription}}
+                </span>
+            </div>
+        </li>
         {% endfor %}
+    </ul>
+        
 {% endblock %}

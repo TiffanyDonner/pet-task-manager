@@ -16,7 +16,13 @@ mongo = PyMongo(app)
 @app.route('/')
 @app.route('/get_events')
 def get_events():
-    return render_template("events.html", tasks=mongo.db.events.find())
+    return render_template("events.html", 
+                            events=mongo.db.events.find())
+
+@app.route('/add_event')
+def add_event():
+    return render_template('addevent.html',
+                           categories=mongo.db.categories.find())
 
 
 if __name__ == '__main__':
