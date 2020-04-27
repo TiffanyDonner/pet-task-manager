@@ -8,8 +8,9 @@ if path.exists("env.py"):
 
 app = Flask(__name__)
 
+
 app.config["MONGO_DBNAME"] = 'paw_purfect_planner'
-app.config["MONGO_URI"] = os.getenv('MONGO_URI', 'mongodb://localhost')
+app.config['MONGO_URI'] = os.environ['MONGO_URI']
 
 mongo = PyMongo(app)
 
@@ -36,6 +37,19 @@ def edit_event(event_id):
     all_categories =  mongo.db.categories.find()
     return render_template('editevent.html', event=the_event,
                            categories=all_categories)
+
+@app.route('/update_event/<event_id>', methods=["POST"])
+def update_event(event_id):
+    events = mongo.db.events
+    events.update( {'_id': ObjectId(event_id)},
+    {
+        'event_name':request.form.get('event_name'),
+        'category_name':request.form.get('category_name'),
+        'event_description': request.form.get('event_description'),
+        'due_date': request.form.get('due_date'),
+        'is_urgent':request.form.get('is_urgent')
+    })
+    return redirect(url_for('get_events'))
 
 if __name__ == '__main__':
     app.run(host=os.environ.get('IP'),

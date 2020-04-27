@@ -10,22 +10,26 @@
                     <select id="category" name="category_name">
                   <option value="" disabled selected>Choose Category</option>
                   {% for cat in categories %}
-                      <option value="{{cat.category_name}}">{{cat.category_name}}</option>
+                    {% if cat.category_name == event.category_name%}
+                        <option value="{{cat.category_name}}" selected >{{cat.category_name}}</option>
+                        {% else %}
+                        <option value="{{cat.category_name}}">{{cat.category_name}}</option>
+                    {% endif %}
                   {% endfor %}
                 </select>
-                    <label>Task Category</label>
+                    <label>Event Category</label>
                 </div>
             </div>
             <div class="input-field col s12">
                 <i class="material-icons prefix">assignment</i>
-                <input id="event_name" name="event_name" type="text">
+                <input id="event_name" name="event_name" type="text" class="validate" value="{{event.event_name}}">
                 <label for="icon_prefix">Event Name</label>
             </div>
         </div>
         <div class="row">
             <div class="input-field col s12">
                 <i class="material-icons prefix">subject</i>
-                <textarea name="event_description" id="event_description" class="materialize-textarea"></textarea>
+                <textarea name="event_description" id="event_description" class="materialize-textarea">{{event.event_description}}</textarea>
                 <label for="icon_telephone">Event Description</label>
             </div>
         </div>
@@ -39,7 +43,11 @@
         <div class="row">
             <div class="switch">
                 <label>
-                  <input id="is_urgent" name="is_urgent" type="checkbox">
+                  {% if event.is_urgent %}
+                          <input id="is_urgent" name="is_urgent" type="checkbox" checked>
+                    {% else %}
+                         <input id="is_urgent" name="is_urgent" type="checkbox">
+                    {% endif%}
                   <span class="lever"></span>
                   Is Urgent
                 </label>
@@ -52,4 +60,13 @@
         </div>
     </form>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        due_date = Date.parse('{{event.due_date}}');
+        $('#due_date').pickadate('picker').set('select', due_date, { format: 'dd/mm/yyyy' }).trigger('change');
+    });
+</script>
+
 {% endblock %}
