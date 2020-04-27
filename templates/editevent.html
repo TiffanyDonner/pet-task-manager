@@ -1,32 +1,31 @@
-{% extends 'base.html' %} {% block content %}
-<h3>Add Event</h3>
+{% extends 'base.html'%} {% block content %}
 
+<h3>Edit Event</h3>
 <div class="row">
-    <form action="{{ url_for('insert_event') }}" method="POST" class="col s12">
-       <div class="row">
+    <form action="{{ url_for('update_event', event_id=event._id) }}" method="POST"  class="col s12">
+        <div class="row">
             <div class="row">
                 <div class="input-field col s12">
                     <i class="material-icons prefix">poll</i>
                     <select id="category" name="category_name">
-                        <option value="" disabled selected>Choose Category</option>
-                        {% for cat in categories %}
-                        <option value="{{cat.category_name}}">{{cat.category_name}}</option>
-                        {% endfor %}
-                    </select>
-                    <label>Event Category</label>
+                  <option value="" disabled selected>Choose Category</option>
+                  {% for cat in categories %}
+                      <option value="{{cat.category_name}}">{{cat.category_name}}</option>
+                  {% endfor %}
+                </select>
+                    <label>Task Category</label>
+                </div>
             </div>
-        </div>        
-        <div class="row">
             <div class="input-field col s12">
                 <i class="material-icons prefix">assignment</i>
-                <input id="event_name" name="task_name" type="text">
+                <input id="event_name" name="event_name" type="text">
                 <label for="icon_prefix">Event Name</label>
             </div>
         </div>
         <div class="row">
             <div class="input-field col s12">
                 <i class="material-icons prefix">subject</i>
-                <textarea name="event_description" id="task_description" class="materialize-textarea"></textarea>
+                <textarea name="event_description" id="event_description" class="materialize-textarea"></textarea>
                 <label for="icon_telephone">Event Description</label>
             </div>
         </div>
@@ -53,5 +52,4 @@
         </div>
     </form>
 </div>
-
 {% endblock %}

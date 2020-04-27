@@ -24,6 +24,18 @@ def add_event():
     return render_template('addevent.html',
                            categories=mongo.db.categories.find())
 
+@app.route('/insert_event', methods=['POST'])
+def insert_event():
+    events = mongo.db.events
+    events.insert_one(request.form.to_dict())
+    return redirect(url_for('get_events'))
+
+@app.route('/edit_event/<event_id>')
+def edit_event(event_id):
+    the_event =  mongo.db.events.find_one({"_id": ObjectId(event_id)})
+    all_categories =  mongo.db.categories.find()
+    return render_template('editevent.html', event=the_event,
+                           categories=all_categories)
 
 if __name__ == '__main__':
     app.run(host=os.environ.get('IP'),
