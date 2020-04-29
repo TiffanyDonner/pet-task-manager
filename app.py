@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, redirect, request, url_for
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+import bcrypt
 from os import path
 if path.exists("env.py"): 
     import env
@@ -15,6 +16,11 @@ app.config['MONGO_URI'] = os.environ['MONGO_URI']
 mongo = PyMongo(app)
 
 @app.route('/')
+def home():
+    """Render home.html and return buttons to either register or login"""
+    
+    return render_template("home.html")
+
 @app.route('/get_events')
 def get_events():
     return render_template("events.html", 
@@ -99,6 +105,88 @@ def insert_category():
 def add_category():
     return render_template('addcategory.html')
 
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    """Register user into database."""
+    if request.method == 'POST':
+        existing_user = mongo.db.users.find_one({'username' : request.form['username']})
+        password = request.form['password']
+        username = request.form['username']
+        
+        if password == '' or username == '':
+            error = 'Please enter a username and password'
+            return render_template('register.html')
+                                    
+        if existing_user is None:
+            hashpass = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt())
+            
+            mongo.db.users.insert_one({
+                'username' : request.form['username'],
+                'pet_name' : request.form['pet_name'],
+                'first_name' : request.form['first_name'],
+                'last_name' : request.form['last_name'],
+                'email' : request.form['email'],
+                'password' : hashpass, 
+            })
+            session['username'] = request.form['username']
+            return redirect(url_for('home'))
+        else:
+            flash('This username already exists!')
+
+    return render_template('register.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """Match form data with user database data and if match log in"""
+
+    username = request.form['username']
+    login_user = mongo.db.users.find_one({'username': username})
+
+    if login_user:
+        if bcrypt.checkpw(request.form['password'].encode('utf-8'),
+                          login_user['password']):
+            session['username'] = request.form.to_dict()['username']
+            user_id = login_user['username']
+            return redirect(url_for('user', user_id = user_id ))
+        else:
+            flash('Invalid username/password combination!')
+            return render_template('register.html')
+    else:
+        flash('Invalid username/password combination!')
+        
+    return render_template('login.html')
+
+
+@app.route('/user/<user_id>', methods=['GET', 'POST'])
+def user(user_id):
+    """Display all data in the user collection in the database."""
+    
+    if request.method == 'GET':
+        if 'username' in session:
+            the_user = mongo.db.users.find_one({'username': user_id })
+            return render_template('events.html', user=the_user)
+        else:
+            return render_template("home.html")
+    elif request.method == 'POST':
+        mongo.db.users.update_one( {"username": user_id })
+        return redirect(url_for('user', user_id=user_id))
+
+
+@app.route('/end_session')
+def end_session():
+    """End session."""
+    
+    session.clear()
+    return render_template("home.html")
+    
+
+@app.errorhandler(404)
+def error_page(e):
+    """Handle 404 by rendering error-page.html."""
+    
+    return render_template('error-page.html'), 404
 
 if __name__ == '__main__':
     app.run(host=os.environ.get('IP'),

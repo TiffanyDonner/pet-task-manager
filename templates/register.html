@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <h3>Join today</h3>
+    <div class="row login-join">
+        <form method="POST" action="{{ url_for('register') }}">
+            <div>
+                <label for="username">Username : </label>
+                <input type="text" name="username" id="username"></input>
+            </div>
+            <div>
+                <label for="pet_name">Pet Name : </label>
+                <input type="text" name="pet_name" id="pet_name"></input>
+            </div>
+            <div>
+                <label for="first_name">First Name : </label>
+                <input type="text" name="first_name" id="first_name"></input>
+            </div>
+            <div>
+                <label for="last_name">Last Name : </label>
+                <input type="text" name="last_name" id="last_name"></input>
+            </div>
+            <div>
+                <label for="email">Email Address : </label>
+                <input type="text" name="email" id="email"></input>
+            </div>
+            <div>
+                <label for="password">Password : </label>
+                <input type="password" id="password" name="password"> </input>
+            </div>
+            <div>
+                <button type='submit' class="btn waves-effect waves-light"> Create user </button>
+            </div>
+            <br>
+        </form>
+        <div>
+            <span>
+                Already have an account? <a href="{{ url_for('login') }}">Sign In</a>
+            </span>
+        </div>
+    </div>
+</div>
+{% endblock %}
