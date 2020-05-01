@@ -1,7 +1,18 @@
-<a href="{{ url_for('user'), task.user_id }}"> {{ task.user_name }} </a>
-
-
 {% extends 'base.html'%} {% block content %}
+<!-- CONTAINER START -->
+<div class="container">
+    <!-- USERNAME ROW START -->
+    <div class="row">
+        <div class="col-12">
+            <h1> Hi <span> {{session["username"]}} </span>, </h1>
+        </div>
+    </div>
+    <!-- USERNAME ROW END -->
+    <div class="row">
+        <div class="col s12">
+            <a href="{{url_for('add_event')}}" class="waves-effect waves-light btn btn_small">+ Add Event</a>
+        </div>
+    </div>
 <div class="row">
     <ul class="collapsible" data-collapsible="accordion">
         {% for event in events %}

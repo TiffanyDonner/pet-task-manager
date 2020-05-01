@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, session
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 import bcrypt
@@ -12,6 +12,7 @@ app = Flask(__name__)
 
 app.config["MONGO_DBNAME"] = 'paw_purfect_planner'
 app.config['MONGO_URI'] = os.environ['MONGO_URI']
+app.secret_key = 'somesecretkey'
 
 mongo = PyMongo(app)
 
@@ -141,20 +142,21 @@ def register():
 def login():
     """Match form data with user database data and if match log in"""
 
-    username = request.form['username']
-    login_user = mongo.db.users.find_one({'username': username})
+    if request.method == 'POST':
+        username = request.form['username']
+        login_user = mongo.db.users.find_one({'username': username})
 
-    if login_user:
-        if bcrypt.checkpw(request.form['password'].encode('utf-8'),
-                          login_user['password']):
-            session['username'] = request.form.to_dict()['username']
-            user_id = login_user['username']
-            return redirect(url_for('user', user_id = user_id ))
+        if login_user:
+            if bcrypt.checkpw(request.form['password'].encode('utf-8'),
+                            login_user['password']):
+                session['username'] = request.form.to_dict()['username']
+                user_id = login_user['username']
+                return redirect(url_for('user', user_id = user_id ))
+            else:
+                flash('Invalid username/password combination!')
+                return render_template('register.html')
         else:
             flash('Invalid username/password combination!')
-            return render_template('register.html')
-    else:
-        flash('Invalid username/password combination!')
         
     return render_template('login.html')
 
@@ -166,9 +168,9 @@ def user(user_id):
     if request.method == 'GET':
         if 'username' in session:
             the_user = mongo.db.users.find_one({'username': user_id })
-            return render_template('events.html', user=the_user)
+            return render_template('profile_page.html', user=the_user)
         else:
-            return render_template("home.html")
+            return render_template("login.html")
     elif request.method == 'POST':
         mongo.db.users.update_one( {"username": user_id })
         return redirect(url_for('user', user_id=user_id))

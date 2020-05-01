@@ -1,9 +1,15 @@
 body {
     background-color: #81919F;
+    color:#4B2A14;
 }
 
 nav {
     background-color: #4B2A14;
+}
+
+.btn, .btn-large {
+    background-color: #44AA00;
+    margin: 5px 5px;
 }
 
 .btn_small {
@@ -16,4 +22,14 @@ nav {
 
 .event_header {
     margin-top: 5px;
+}
+
+/* Form area */
+label {
+    color: #fff;
+    font-size: 1rem;
+}
+
+input {
+    background-color: #fff;
 }

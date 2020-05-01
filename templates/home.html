@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-
-<a href="{{ url_for('register') }}" class="waves-effect waves-light btn-large"><i class="material-icons left">person_add</i>Create New Account</a>
-<a href="{{ url_for('login') }}" class="waves-effect waves-light btn-large"><i class="material-icons left">account_circle</i>Log In</a>
-
+<div class="parallax-container">
+  <div class="parallax"><img src="../static/images/final667-dog-and-cat-behind-tree-trunk.png" alt="Cat and dog behind a tree trunk"></div>
+</div>
+<h5 class = "tagline">Your Fur-family's Important Information All In One Place</h5>
+<div class="row">
+    <a href="{{ url_for('register') }}" class="waves-effect waves-light btn-large"><i class="material-icons left">person_add</i>Create New Account</a>
+</div>
+<div class="row">
+    <a href="{{ url_for('login') }}" class="waves-effect waves-light btn-large"><i class="material-icons left">account_circle</i>Log In</a>
+</div>
 {% endblock %}
